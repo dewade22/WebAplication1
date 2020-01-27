@@ -1,0 +1,148 @@
+﻿@model WebApplication1.Models.MainSystem.Roles
+@{
+    ViewData["Title"] = ""+ViewBag.roles+" Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="content" id="content-editor">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Edit Roles</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="col-12">
+                    <form id="form-edit" role="form" method="post" asp-controller="Roles" asp-action="EditTheRolesNameAndDescription">                        
+                        <div class="form-group">
+                            <input asp-for="Id" type="text" class="hidden disabled"/>
+                            <div class="input-group fg-float">
+                                <span class="input-group-addon"><i class="zmdi zmdi-wrench"></i></span>
+                                <div class="fg-line">
+                                    <input asp-for="Title" type="text" class="form-control" id="roles-tittle" required />
+                                    <label class="fg-label">Roles Name<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <br /><br />
+                            <div class="input-group fg-float">
+                                <span class="input-group-addon"><i class="zmdi zmdi-file-text"></i></span>
+                                <div class="fg-line">
+                                    <textarea asp-for="Description" type="text" class="form-control" id="roles-description" required></textarea>
+                                    <label class="fg-label">Roles Description<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2 col-md-offset-5">
+                                <button type="submit" class="btn btn-block palette-Blue bg waves-effect"><i class="zmdi zmdi-edit"> </i>Edit</button>
+                            </div>
+                            <br />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content" id="section-roles-menu">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Manage Menu</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="form-row">
+                    <div class="table-responsive">
+                        <div class="col-12">
+
+                            <div class="form-row">
+                                <button type="button" class="btn palette-Blue bg waves-effect">Collepsed</button>
+                                <button type="button" class="btn palette-Green bg waves-effect">Expanded</button>
+                                <button type="button" class="btn palette-Teal bg waves-effect">Checked All</button>
+                                <button type="button" class="btn palette-Yellow bg waves-effect">Unchek All</button>
+                            </div>
+                            <br />
+
+                            <ul class="mytree">
+                                @Html.Raw(ViewBag.menu)
+                            </ul>
+                            <br />
+
+                            <div class="col-md-2 col-md-offset-1">
+                                <button onclick="Done()" class="btn btn-primary bg waves-effect"><i class="zmdi zmdi-edit"></i> Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{ 
+    <script type="text/javascript" src="~/ThemeForest/sweetalert2/sweetalert2.all.min.js"></script>
+<script>
+    $(document).on('click', '.mytree label', function (e) {
+        $(this).next('ul').fadeToggle();
+        e.stopPropagation();
+    });
+    $(document).on('change', '.mytree input[type=checkbox]', function (e) {
+        $(this).siblings('ul').find("input[type='checkbox']").prop('checked', this.checked);
+        $(this).parentsUntil('.mytree').children("input[type='checkbox']").prop('checked', this.checked);
+        e.stopPropagation();
+    });
+    $(document).on('click', 'button', function (e) {
+        switch ($(this).text()) {
+            case 'Collepsed':
+                $('.mytree ul').fadeOut();
+                break;
+            case 'Expanded':
+                $('.mytree ul').fadeIn();
+                break;
+            case 'Checked All':
+                $(".mytree input[type='checkbox']").prop('checked', true);
+                break;
+            case 'Unchek All':
+                $(".mytree input[type='checkbox']").prop('checked', false);
+                break;
+            default:
+        }
+    });
+</script>
+<script>
+    function Done() {
+
+        var checkedValues = $('input:checkbox:checked').map(function () {
+            return this.id;
+        }).get();
+
+        $body = $("body");
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateRoles", "Roles")',
+            data: {
+                id: @Model.Id,
+                roles: checkedValues
+            },
+            error: function (result) {
+                alert("error");
+            },
+            success: function (result) {
+                $body.removeClass("loading");
+                if (result.status == true) {
+
+                    alert("Successfully Updated Role!")
+                    var baseUrl = "/Roles";
+                    window.location.href = baseUrl;
+                }
+                else {
+                    alert("Failed:"+result);
+                }
+            }
+        });
+    }
+</script>
+}

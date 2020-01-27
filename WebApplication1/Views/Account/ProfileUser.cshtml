@@ -1,0 +1,499 @@
+﻿@model WebApplication1.Models.MainSystem.MainSystemViewModel.UserViewModel
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "ProfileUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>@User.Identity.Name</h1> <h3>Profile</h3>
+            </div>
+            <div class="card-body  card-padding">
+                <div class="form-group">
+                    <div class="row">
+                        <form id="form-user-image" role="form" enctype="multipart/form-data" asp-controller="Account" asp-action="UpdateProfileUser">
+                            <!--Isi Error Disini-->
+                            <center><span class="text-danger h3" id="error-page-test">@ViewBag.ErrorPage</span></center>
+                            <br /><br />
+                            <div class="col-md-4">
+                                <div class="col-12">
+                                    <div class="form-group lightbox-item p-item">
+                                        <center><img id="profile-picture" alt="User profile picture" src="~/dist/img/@ViewBag.Picture" style="width:250px; height:250px; max-width:100%; max-height:100%; border-radius:50%" /></center>
+                                        <br />
+                                        <br />
+                                        <center><button type="button" class="btn palette-Blue bg waves-effect center" id="btn-show-preview"> Change Image</button></center>
+
+                                        <div id="images-preview">
+                                            <p class="f-500 c-black m-b-20">Image Preview</p>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+                                                <div>
+                                                    <span class="btn btn-info btn-file">
+                                                        <span class="fileinput-new">Select image</span>
+                                                        <span class="fileinput-exists">Change</span>
+                                                        <input type="file" asp-for="aspnetUser.Picture" name="file">
+                                                    </span>
+                                                    <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                       
+                            <div class="col-md-8">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input asp-for="roles.Id" type="text" id="roles_id" hidden disabled />
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                                            <div class="fg-line">
+                                                <input asp-for="aspnetUser.UserName" type="text" class="form-control" id="UserName" disabled />
+                                                <label class="fg-label">User Name<span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                                            <div class="fg-line">
+                                                <input asp-for="aspnetUser.Email" type="email" class="form-control" id="Email" disabled />
+                                                <label class="fg-label">Email<span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-phone"></i></span>
+                                            <div class="fg-line">
+                                                <label>Phone Number</label>
+                                                <input asp-for="aspnetUser.PhoneNumber" type="text" class="form-control input-mask" data-mask="000 000 000 0000" placeholder="eg: 000 000 000 000" id="PhoneNo" />
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-labels"></i></span>
+                                            <div class="fg-line">
+                                                <input asp-for="roles.Title" type="text" class="form-control" id="Roles" disabled />
+                                                <label class="fg-label">Roles<span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-labels"></i></span>
+                                            <div class="fg-line">
+                                                <input asp-for="roles.Description" type="text" class="form-control" id="RolesDescription" disabled />
+                                                <label class="fg-label">Roles Description<span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn palette-Teal bg waves-effect pull-right" id="profiles-update"> Update Profile</button>
+                            <br /><br />
+                        </form>
+                        <br /><br />
+                        <div class="col-12">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-primary btn-lg waves-effect btn-block" id="btnAddVendor">I'm A Vendor</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" id="vendor-card">
+            <div class="card-header">
+                <h2 class="card-title">Vendor Data</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="form-group">
+                    <div class="row">
+                        <form id="VendorDataForm" role="form" method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="UpdateVendorData">
+                            <div class="col-12">
+
+                                <center><span class="text-danger h3" id="error-page-test">@ViewBag.ErrorPage</span></center>
+                                <input type="hidden" asp-for="AspNetVendor.FileLocation" id="pdfLoc" />
+                                <div class="col-md-6">
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-store"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.CompanyName" type="text" class="form-control" id="CompanyName" required />
+                                            <label class="fg-label">Company Name <span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-pin"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.Address" type="text" class="form-control" id="CompanyAddress" required />
+                                            <label class="fg-label">Company Address<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-file"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.NpwpNo" type="text" class="form-control" id="CompanyNPWP" required />
+                                            <label class="fg-label">NPWP No.<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-file"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.SiupNo" type="text" class="form-control" id="CompanySIUP" required />
+                                            <label class="fg-label">SIUP No.<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.ContactName" type="text" class="form-control" id="ContactName" required />
+                                            <label class="fg-label">Contact Name<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.Contact" type="text" class="form-control input-mask" data-mask="000 000 000 0000" id="ContactNo" required />
+                                            <label class="fg-label">Contact No.<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.ContactEmail" type="email" class="form-control" id="ContactEmail" required />
+                                            <label class="fg-label">Contact E-Mail<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-city"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.VendorCity" type="text" class="form-control" id="vendorCity" />
+                                            <label class="fg-label">Vendor City<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-globe"></i></span>
+                                        <div class="fg-line">
+                                            <label>Vendor Country<span class="text-danger">*</span></label>
+                                            <select asp-for="AspNetVendor.Country" asp-items="ViewBag.ListOfCountries" class="selectpicker" data-width="100%" data-live-search="true" id="VendorCountry" required>
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.InvoiceName" type="text" class="form-control" id="InvoiceName" required />
+                                            <label class="fg-label">Invoice To Name<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.InvoiceContact" type="text" class="form-control input-mask" data-mask="000 000 000 0000" id="InvoiceNo" required />
+                                            <label class="fg-label">Invoice To Contact No.<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.InvoiceEmail" type="email" class="form-control" id="InvoiceEmail" required />
+                                            <label class="fg-label">Invoice To E-Mail<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-dialpad"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.VendorFaxNo" type="text" class="form-control" id="FaxNo" />
+                                            <label class="fg-label">Fax Number</label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-money"></i></span>
+                                        <div class="fg-line">
+                                            <label>Currency<span class="text-danger">*</span></label>
+                                            <select class="selectpicker" data-width="100%" data-live-search="true" asp-for="AspNetVendor.Currency" asp-items="ViewBag.Currency" id="currencycode" required>
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-globe"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.Swiftcode" type="text" class="form-control" id="SwiftCode" />
+                                            <label class="fg-label">Swift Code</label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-city"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.Bank_Account1" type="text" class="form-control" id="BankAccount1" required />
+                                            <label class="fg-label">Bank Account 1<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-city"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.Bank_Account2" type="text" class="form-control" id="BankAccount2" />
+                                            <label class="fg-label">Bank Account 2</label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-badge-check"></i></span>
+                                        <div class="fg-line">
+                                            <input asp-for="AspNetVendor.IsActive" type="text" class="form-control" id="IsActive" disabled />
+                                            <label class="fg-label">Active?</label>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+
+                                    <div class="input-group fg-float" id="ShowPdf">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-attachment-alt zmdi-hc-fw"></i></span>
+                                        <div class="fg-line">
+                                            <label> My Pdf File </label>
+                                            <button type="button" asp-for="aspnetUser.UserName" class="btn palette-Blue bg waves-effect" id="ShowMyPdf">Show Pdf</button>
+                                        </div>
+                                    </div><br /><br />
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12" id="btn-span-input">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4">
+                                            <div id="images-preview">
+                                                <p class="f-500 c-black m-b-20">Please Attach Your NPWP & SIUP File Here (.pdf)<span class="text-danger"> Max 5MB</span></p>
+                                                <div class="fileinput fileinput-new" data-provides="fileinput">
+                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+                                                    <div>
+                                                        <span class="btn btn-info btn-file">
+                                                            <span class="fileinput-new">Select file</span>
+                                                            <span class="fileinput-exists">Change</span>
+                                                            <input type="file" asp-for="AspNetVendor.FileLocation" name="file1">
+                                                        </span>
+                                                        <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br /><br /><br /><br />
+                            <button type="submit" id="btn-submit-vendor" class="btn palette-Orange btn-lg bg waves-effect btn-block"><i class="zmdi zmdi-upload"></i>Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+<!--Added JS-->
+<script type="text/javascript" src="~/ThemeForest/fancybox/dist/jquery.fancybox.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/bower-components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/bower-components/nouislider/distribute/jquery.nouislider.all.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/bower-components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/bower-components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/summernote/dist/summernote-updated.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/sweetalert2/sweetalert2.all.min.js"></script>
+
+<!--Custom JS-->
+<script type="text/javascript" src="~/ThemeForest/vendors/bower-components/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/fileinput/fileinput.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/input-mask/input-mask.min.js"></script>
+<script type="text/javascript" src="~/ThemeForest/vendors/farbtastic/farbtastic.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#images-preview").hide();
+            $("#vendor-card").hide();
+
+            //Memunculkan Add vendor berdasarkan Roles\\
+            var getRoles = $("#roles_id").val();
+            if (getRoles == "1002") {
+                $("#btnAddVendor").hide();
+                $("#vendor-card").show();
+            }
+            else if (getRoles == "2") {
+                $("#btnAddVendor").show();
+            }
+            else {
+                $("#btnAddVendor").hide();
+            }
+
+            //Memunculkan Show Pdf apabila Pdf Sudah pernah diupload\\
+            var getPdf = $("#pdfLoc").val();
+            if (getPdf == null || getPdf == "") {
+                $('#ShowPdf').hide();
+            }
+
+            //menonaktifkan beberapa field yang dapat diupdate oleh vendor ketika vendor telah aktif
+            var getStatusVendor = $("#IsActive").val();
+            if (getStatusVendor == "Yes") {
+                document.getElementById('CompanyName').disabled = true;
+                document.getElementById('CompanyAddress').disabled = true;
+                document.getElementById('CompanyNPWP').disabled = true;
+                document.getElementById('CompanySIUP').disabled = true;
+                document.getElementById('vendorCity').disabled = true;
+                document.getElementById('SwiftCode').disabled = true;
+                document.getElementById('BankAccount1').disabled = true;
+                document.getElementById('BankAccount2').disabled = true;
+                $("#VendorCountry").prop("disabled", "disabled");
+                $("#currencycode").prop("disabled", "disabled");
+                $("#btn-span-input").hide();
+            } else {
+                document.getElementById('CompanyName').disabled = false;
+                document.getElementById('CompanyAddress').disabled = false;
+                document.getElementById('CompanyNPWP').disabled = false;
+                document.getElementById('CompanySIUP').disabled = false;
+                document.getElementById('vendorCity').disabled = false;
+                document.getElementById('SwiftCode').disabled = false;
+                document.getElementById('BankAccount1').disabled = false;
+                document.getElementById('BankAccount2').disabled = false;
+                $("#VendorCountry").prop("enabled", "enabled");
+                $("#currencycode").prop("enabled", "enabled");
+                $("#btn-span-input").show();
+            }
+
+        })
+    </script>
+<script>
+    $("#btnAddVendor").click(function () {
+        $("#vendor-card").show();
+        $("#btnAddVendor").hide();
+    })
+</script>
+<script>
+    $("#btn-show-preview").click(function () {
+        $("#btn-show-preview").hide();
+        $("#profile-picture").hide();
+        $("#images-preview").show();
+    })
+</script>
+<script>
+    $('#VendorDataForm').submit(function (e, params) {
+        var localParams = params || {};
+
+        if (!localParams.send) {
+            e.preventDefault();
+        }
+
+        Swal.fire({
+            title: 'Are You Sure?',
+            text: 'Are you sure to update your Vendor Data?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<i class="zmdi zmdi-edit"></i> Update!',
+            cancelButtonText: 'Cancel',
+            closeOnConfirm: true
+        }).then((result) => {
+            if (result.value) {
+                $(e.currentTarget).trigger(e.type, { 'send': true });
+            }
+        })
+    });
+</script>
+<script>
+    $('#ShowMyPdf').click(function () {
+        var id = $('#UserName').val();
+        var link = "/Account/DownloadPdf?id=" + id;
+        var win = window.open(link, '_blank');
+        win.focus();
+
+    })
+</script>
+<script>
+    $('#form-user-image').submit(function (e, params) {
+        var localParams = params || {};
+
+        if (!localParams.send) {
+            e.preventDefault();
+        }
+
+        Swal.fire({
+            title: 'Are You Sure?',
+            text: 'Are you sure to update your Data?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<i class="zmdi zmdi-edit"></i> Update!',
+            cancelButtonText: 'Cancel',
+            closeOnConfirm: true
+        }).then((result) => {
+            if (result.value) {
+                $(e.currentTarget).trigger(e.type, { 'send': true });
+            }
+        })
+        
+    });
+</script>
+ }
+@section Styles{
+<link rel="stylesheet" href="~/ThemeForest/fancybox/dist/jquery.fancybox.min.css" />
+
+<!-- CSS Tambahan-->
+<link rel="stylesheet" href="~/ThemeForest/vendors/bower-components/bootstrap-select/dist/css/bootstrap-select.css" />
+<link rel="stylesheet" href="~/ThemeForest/vendors/bower-components/nouislider/distribute/jquery.nouislider.min.css" />
+<link rel="stylesheet" href="~/ThemeForest/vendors/bower-components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet" href="~/ThemeForest/vendors/farbtastic/farbtastic.css" />
+<link rel="stylesheet" href="~/ThemeForest/vendors/bower-components/chosen/chosen.min.css" />
+<link rel="stylesheet" href="~/ThemeForest/vendors/summernote/dist/summernote.css" />
+
+}

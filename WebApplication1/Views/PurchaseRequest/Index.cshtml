@@ -1,0 +1,281 @@
+﻿@model WebApplication1.Models.ViewModel.PurchaseRequestViewModel
+@{
+    ViewData["Title"] = "Purchase Requisition Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>
+                    Pengajuan Purchase Requisition
+                </h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="form-group">
+                    <div class="col-12">
+                        <center><span class="text-danger h1" id="page-load-awal">Please Select Year First !</span></center><br /><br />
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <div class="input-group fg-float">
+                                    <span class="input-group-addon"><i class="zmdi zmdi-calendar-alt zmdi-hc-fw"></i></span>
+                                    <div class="fg-line">
+                                        <label>YEAR</label>
+                                        <select class="selectpicker" asp-items="ViewBag.TahunPR" data-width="100%" data-live-search="true" id="Tahun">
+                                            <option></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <br />
+                                <button id="ClickonMe" onclick="ProcessData()" class="btn btn-block palette-Blue bg waves-effect">Show</button>
+                            </div>
+                        </div>
+                        <div class="wrapper">
+                            <canvas id="canvas2" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+@section Styles{
+    <!--Import CSS-->
+    <link href="~/ThemeForest/ChartJS/Chart.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/ThemeForest/vendors/bower-components/bootstrap-select/dist/css/bootstrap-select.css" />
+
+    <!--End of Import CSS-->
+}
+@section Scripts{
+    <!--Import Script-->
+    <script type="text/javascript" src="~/ThemeForest/vendors/bower-components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script type="text/javascript" src="~/ThemeForest/ChartJS/Chart.min.js"></script>
+    <script type="text/javascript" src="~/ThemeForest/fancybox/dist/jquery.fancybox.min.js"></script>  
+    <script type="text/javascript" src="~/ThemeForest/sweetalert2/sweetalert2.all.min.js"></script>
+    <!--End of Import Scripts-->
+    <!--Custom Scripts-->
+    
+
+<script>
+    $(document).ready(function () {
+        $("#page-load-awal").show();
+    })
+   var tahun = $("#Tahun").val();
+   
+   var dataawal0 = ['0','0','0','0','0','0','0','0','0','0','0','0','0'];
+   var canvas = document.getElementById('canvas2');
+   var data = {
+        labels: ["January", "February", "March", "April", "May", "June", "July","Agustus", "September", "Oktober", "November", "Desember"],
+        datasets: [
+            {
+                label: "Total PR",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "rgba(75,192,192,1)",
+                data: dataawal0,
+            },
+            {
+                label: "PR Open",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#d16f41",
+                borderColor: "#d16f41",
+                data: dataawal0,
+            },
+            {
+                label: "PR Release",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#f76f00",
+                borderColor: "#f76f00",
+                data: dataawal0,
+            },
+            {
+                label: "PR Pending",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#f0c890",
+                borderColor: "#f0c890",
+                data: dataawal0,
+            },
+            {
+                label: "PR Closed",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#ffd117",
+                borderColor: "#ffd117",
+                data: dataawal0,
+            },
+            {
+                label: "PR Posted",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#c3ff00",
+                borderColor: "#c3ff00",
+                data: dataawal0,
+            },
+            {
+                label: "PR Rejected",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#00ff04",
+                borderColor: "#00ff04",
+                data: dataawal0,
+            },
+            {
+                label: "PR Cancelled",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#00ff8c",
+                borderColor: "#00ff8c",
+                data: dataawal0,
+            },
+            {
+                label: "PR Pending Payments",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#00ffe5",
+                borderColor: "#00ffe5",
+                data: dataawal0,
+            },
+            {
+                label: "PR Archived",
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: "#8400ff",
+                borderColor: "#8400ff",
+                data: dataawal0,
+            }
+        ]
+   };
+
+    async function getData(tahun) {
+        const totalPR = [];
+        const prOpen = [];
+        const prReleases = [];
+        const prPendings = [];
+        const prCloseds = [];
+        const prPosteds = [];
+        const prRejecteds = [];
+        const prCancelleds = [];
+        const prPendingPayments = [];
+        const prArchived = [];
+       
+        $.ajax({
+            type: 'GET',
+            dataType: 'JSON',
+            url: '/PurchaseRequest/GetPRTahunan?tahun=' + tahun,
+            success: function (data) {
+                Object.keys(data.myCountPROpen).forEach(function (k) {
+                    const prall = data.myCountPR[k];
+                    totalPR.push(prall); 
+                    const prop = data.myCountPROpen[k];
+                    prOpen.push(prop);
+                    const prRealease = data.myCountPRRelease[k];
+                    prReleases.push(prRealease);
+                    const prPending = data.myCountPRPending[k];
+                    prPendings.push(prPending);
+                    const prClosed = data.myCountPRClosed[k];
+                    prCloseds.push(prClosed);
+                    const prPosted = data.myCountPRPosted[k];
+                    prPosteds.push(prPosted);
+                    const prReject = data.myCountPRReject[k];
+                    prRejecteds.push(prReject);
+                    const prCancelled = data.myCountPRCancelled[k];
+                    prCancelleds.push(prCancelled);
+                    const prPendingPayment = data.myCountPendingPayment[k];
+                    prPendingPayments.push(prPendingPayment);
+                    const archiv = data.myArchived[k];
+                    prArchived.push(archiv);
+                })                
+            }
+        })
+        return {
+            totalPR,
+            prOpen,
+            prReleases,
+            prPendings,
+            prCloseds,
+            prPosteds,
+            prRejecteds,
+            prCancelleds,
+            prPendingPayments,
+            prArchived
+        };
+    }
+    async function ProcessData() {
+        const totalPRs = [];
+        const prOpens = [];
+        const prReleases = [];
+        const prPendings = [];
+        const prCloseds = [];
+        const prPosteds = [];
+        const prRejecteds = [];
+        const prCancelleds = [];
+        const prPendingPayments = [];
+        const Archived = [];
+
+        if (!$("#Tahun").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Year Cannot Be Null..!'
+            })
+        } else {
+            $("#page-load-awal").hide();
+            /*var newData=[];
+            for(var i=0;i<7;i++){
+                newData.push(Math.round(Math.random() * 100))
+            }
+            */
+            tahun = $("#Tahun").val();
+            const dataBaru = await getData(tahun);
+
+            totalPRs.push(dataBaru.totalPR);
+            prOpens.push(dataBaru.prOpen);
+            prReleases.push(dataBaru.prReleases);
+            prPendings.push(dataBaru.prPendings);
+            prCloseds.push(dataBaru.prCloseds);
+            prPosteds.push(dataBaru.prPosteds);
+            prRejecteds.push(dataBaru.prRejecteds);
+            prCancelleds.push(dataBaru.prCancelleds);
+            prPendingPayments.push(dataBaru.prPendingPayments);
+            Archived.push(dataBaru.prArchived);
+
+            myLineChart.data.datasets[0].data = totalPRs[0];
+            myLineChart.data.datasets[1].data = prOpens[0];
+            myLineChart.data.datasets[2].data = prReleases[0];
+            myLineChart.data.datasets[3].data = prPendings[0];
+            myLineChart.data.datasets[4].data = prCloseds[0];
+            myLineChart.data.datasets[5].data = prPosteds[0];
+            myLineChart.data.datasets[6].data = prRejecteds[0];
+            myLineChart.data.datasets[7].data = prCancelleds[0];
+            myLineChart.data.datasets[8].data = prPendingPayments[0];
+            myLineChart.data.datasets[9].data = Archived[0];
+
+            myLineChart.update();
+        }      
+    }
+    var option = {
+        showLines: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    };
+
+    var myLineChart = new Chart(canvas, {
+        type: 'line',
+	    data:data,
+        options:option
+    });
+</script>
+}

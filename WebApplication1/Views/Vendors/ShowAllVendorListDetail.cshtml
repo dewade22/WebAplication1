@@ -1,0 +1,167 @@
+﻿@model WebApplication1.Models.ViewModel.VendorViewModel
+@{
+    ViewData["Title"] = "" + ViewBag.NamaVendor;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Detil Vendor @ViewBag.NamaVendor</h2>
+            </div>
+            <div class="card-body card-padding" id="form-view">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <center><span class="text-danger center h3" id="nonaktifVendor">Offline Vendor</span></center>
+                                <center><span class="center h3" id="aktifVendor" style="color:blue">Online Vendor</span></center>
+                                <span id="cekuser" class="hidden">@Html.DisplayFor(a => a.aspVendors.Id)</span>
+                            </div>
+                            <div class="form-row">
+                                
+                                <!--Row Kiri-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>VendorNo</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorNo)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Vendor Name</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorName)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Vendor City</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorCity)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Vendor Contact</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorContact)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Phone No</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorPhoneNo)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Fax No</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorFaxNo)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Mobile No</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.MobileNo)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>E-Mail</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.Email)</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                                <!--Row Kanan-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Country Code</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.Country)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Currency Code</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.CurrencyCode)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Payment Terms</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.PaymentTermsCode)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Vendor Posting Group</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VendorPostingGroup)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Gen Business Posting Group</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.GenBusPostingGroup)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>VAT Group</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.VatbusPostingGroup)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Location Code</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.LocationCode)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Created By</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.CreatedBy)</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="form-group">
+                                        <dl class="dl-horizontal">
+                                            <dt>Modified By</dt>
+                                            <dd>@Html.DisplayFor(a => a.vendors.LastModifiedBy)</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-4 col-md-4">
+                                    <button type="button" id="back" class="btn btn-block palette-Teal bg waves-effect"><i class="zmdi zmdi-arrow-back pull-left"> </i> Back</button> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#nonaktifVendor").hide();
+            $("#aktifVendor").hide();
+            var chkusr = $("#cekuser").text();
+            console.log(chkusr);
+
+            if (chkusr == null || chkusr == "") {
+                $("#nonaktifVendor").show();
+                $("#aktifVendor").hide();
+            }
+            else {
+                $("#aktifVendor").show();
+                $("#nonaktifVendor").hide();
+            }
+        })
+    </script>
+<script>
+    $("#back").click(function () {
+        window.location.href = "/Vendors/VendorList";
+    })
+</script>
+ }

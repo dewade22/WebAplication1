@@ -1,0 +1,76 @@
+﻿@model WebApplication1.Models.ViewModel.VendorViewModel
+@{
+    ViewData["Title"] = "Offline Vendor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section id="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Vendor Offline List</h1>
+            </div>
+            <div class="card-body card-padding">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-vmiddle" style="table-layout: auto;">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-visible="false" data-order="desc">ID</th>
+                                <th data-column-id="No">No</th>
+                                <th data-column-id="CompanyName">Company Name</th>
+                                <th data-column-id="CompanyAddress">Company Address</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false">Commands</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;}
+                            @foreach (var item in Model.vendorList)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(a => item.VendorId)</td>
+                                    <td>@(i++)</td>
+                                    <td>@Html.DisplayFor(a => item.VendorName)</td>
+                                    <td>@Html.DisplayFor(a => item.VendorAddress)</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{
+    <script type="text/javascript" src="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+    <!--Section Custom Script-->
+    <script>
+        $(document).ready(function () {
+            $("#data-table").bootgrid({
+                caseSensitive: false,
+                css: {
+                    icon: 'zmdi icon',
+                    iconColumns: 'zmdi-view-module',
+                    iconDown: 'zmdi-expand-more',
+                    iconRefresh: 'zmdi-refresh',
+                    iconUp: 'zmdi-expand-less'
+                },
+                formatters: {
+                    "commands": function (column, row) {
+                        return "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" onclick='ShowVendor(\"" + row.id + "\")'><span class=\"zmdi zmdi-eye\"></span></button>";
+                    },
+                }
+            });
+        })
+    </script>
+<script>
+    function ShowVendor(id) {
+        var getId = id;
+        console.log(getId);
+        window.location.href = "/Vendors/ShowOfflineVendorinBmlContext?kirtevdamsdbcpzciajsdhgvnzbxcbajshdfgqwyriqiryew=" + getId;
+    }
+</script>
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.min.css" />
+}

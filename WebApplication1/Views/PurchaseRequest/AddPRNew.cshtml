@@ -1,0 +1,364 @@
+﻿@model WebApplication1.Models.ViewModel.PurchaseRequestViewModel
+@{
+    ViewData["Title"] = "Add New PR";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--Untuk Menampilkan Daftar PR-->
+<section class="content" id="form-list-pr">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>PR List</h2>
+                <small>List of BalimOOn Purchase Request</small>
+            </div>
+            <div class="card-body card-padding">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" class="btn palette-Green bg waves-effect" id="show-add"><i class="zmdi zmdi-plus"></i> Add New PR</button>
+                            <div class="table-responsive">
+                                <table id="Tabel-Daftar-PR" class="table table-vmiddle" style="table-layout: auto;">
+                                    <thead>
+                                        <tr>
+                                            <th data-column-id="No" data-header-css-class="PR-No">PR Number</th>
+                                            <th data-column-id="OrderDate" data-type="Date" data-sortable="false" data-header-css-class="OrderDate">Order Date</th>
+                                            <th data-column-id="DueDate" data-type="Date" data-sortable="false" data-header-css-class="Due Date">Exp Receipt Date</th>
+                                            <th data-column-id="Requester" data-header-css-class="Requester">Requester</th>
+                                            <th data-column-id="Dept" data-header-css-class="Dept">Department</th>
+                                            <th data-column-id="status" data-header-css-class="status">Status</th>
+                                            <th data-column-id="action" data-formatter="action" data-sortable="false" data-header-css-class="header-action">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.PRHeaderList)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(a => item.RequisitionNo)</td>
+                                                <td>@Html.DisplayFor(a => item.OrderDate)</td>
+                                                <td>@Html.DisplayFor(a => item.DueDate)</td>
+                                                <td>@Html.DisplayFor(a => item.RequesterId)</td>
+                                                <td>@Html.DisplayFor(a => item.ShortcutDimension1Code)</td>
+                                                <td>@Html.DisplayFor(a => item.Status)</td>
+
+                                                <td></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--Untuk Menambah Header PR-->
+<section class="content" id="form-add-header">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Purchase Request</h2>
+                <small>Add New PR</small>
+            </div>
+
+            <div class="card-body card-padding">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <form id="form-addHeader" role="form" asp-controller="PurchaseRequest" asp-action="AddHeader">
+                                    <div class="col-md-6">
+
+                                        <!--Requester-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-account zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <label>Requested By</label>
+                                                <input asp-for="PRHeaderDetail.RequesterId" type="text" class="form-control" value="@ViewBag.userName" id="requester" readonly />
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <!--Departement Code-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-city zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <label>Department Code</label>
+                                                <input asp-for="PRHeaderDetail.ShortcutDimension1Code" type="text" class="form-control" value="@ViewBag.Department" id="DeptCode" readonly />
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <!--Exp Receipt Date-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-calendar zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <label>Exp. Receipt Date<span class="text-danger">*</span></label>
+                                                <input asp-for="PRHeaderDetail.DueDate" type="date" class="form-control" id="duedate" required />
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <!--Motive Requisition-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-assignment-o zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <textarea asp-for="PRHeaderDetail.RequestNotes" class="form-control" id="requestNotes" required></textarea>
+                                                <label class="fg-label">Motive of Requisition<span class="text-danger">*</span></label>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <!--Location Code-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-pin zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <label>Location<span class="text-danger">*</span></label>
+                                                <select asp-for="PRHeaderDetail.LocationCode" asp-items="@ViewBag.LocationCode" class="selectpicker" data-width="100%" data-live-search="true" id="LocationCode" required>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <!--Project Code-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-label zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <label>Project Code</label>
+                                                <select asp-for="PRHeaderDetail.ShortcutDimension2Code" asp-items="@ViewBag.ProjectCode" class="selectpicker" data-width="100%" data-live-search="true" id="ProjectCode">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <!--Priority-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-collection-item"></i></span>
+                                            <div class="fg-line">
+                                                <label>Priority<span class="text-danger">*</span></label>
+                                                <select asp-for="PRHeaderDetail.Priority" asp-items="@ViewBag.Priority" class="selectpicker" data-width="100%" data-live-search="true" id="Priority">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                        <!--Status-->
+                                        <div class="input-group fg-float">
+                                            <span class="input-group-addon"><i class="zmdi zmdi-assignment-check zmdi-hc-fw"></i></span>
+                                            <div class="fg-line">
+                                                <label>Status</label>
+                                                <select asp-for="PRHeaderDetail.Status" asp-items="@ViewBag.Status" class="selectpicker" data-width="100%" id="Status" disabled>
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Button Dibawahnya-->
+                    <div class="col-md-2 col-md-offset-4">
+                        <button type="button" class="btn btn-block palette-Blue bg waves-effect" id="btnAdd" style="display:block" onclick="Validate()"><span class="zmdi zmdi-plus zmdi-hc-fw"></span> Add</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-block palette-Orange bg waves-effect" id="btn-back"><span class="zmdi zmdi-rotate-left zmdi-hc-fw"></span> Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Styles{
+    <link rel="stylesheet" href="~/ThemeForest/vendors/bower-components/bootstrap-select/dist/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.min.css" />
+    <style>
+        .PR-No {
+            width: 10%;
+        }
+
+        .OrderDate {
+            width: 20%;
+        }
+
+        .DueDate {
+            width: 20%;
+        }
+
+        .Requester {
+            width: 10%;
+        }
+
+        .Dept {
+            width: 10%;
+        }
+
+        .status {
+            width: 10%;
+        }
+
+        .header-action {
+            width: 15%;
+        }
+    </style>
+}
+@section Scripts{
+    <!--Import Scripts Start-->
+    <script type="text/javascript" src="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+    <script type="text/javascript" src="~/ThemeForest/sweetalert2/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="~/ThemeForest/vendors/bower-components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+    <!--Import Scripts End-->
+
+    <!--Custom Scripts Start-->
+
+    <!--Document Ready func()-->
+    <script>
+        $(document).ready(function () {
+            $("#form-add-header").hide();
+            $("#form-list-pr").show();
+
+            $("#Tabel-Daftar-PR").bootgrid({
+                caseSensitive: false,
+                css: {
+                    icon: 'zmdi icon',
+                    iconColumns: 'zmdi-view-module',
+                    iconDown: 'zmdi-expand-more',
+                    iconRefresh: 'zmdi-refresh',
+                    iconUp: 'zmdi-expand-less'
+                },
+                formatters: {
+                    "action": function (column, row) {
+                        return "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" onclick='SendPR(\"" + row.No + "\")'><span class=\"zmdi zmdi-mail-send\"></span></button>" +
+                            "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" onclick='AddLine(\"" + row.No + "\")'><span class=\"zmdi zmdi-plus\"></span></button>";
+                    }
+                }
+            })
+        })
+    </script>
+    <!--Button Click-->
+<script>
+    $("#show-add").click(function () {
+         $("#form-add-header").show();
+         $("#form-list-pr").hide();
+    })
+    $("#btn-back").click(function () {
+        $("#form-add-header").hide();
+        $("#form-list-pr").show();
+        clear();
+    })
+    function clear() {
+        $("#requestNotes").val("");
+        $("#orderdate").val("");
+        $("#duedate").val("");
+        $("#LocationCode").val("");
+        $("#ProjectCode").val("");
+        $("Status").val("");
+        $("#Priority").val("");
+    }
+</script>
+<!--Add Click func Validate()-->
+<script>
+    
+    function Validate() {
+        if (!$("#requester").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Please Reload The Page..!'
+            })
+        } else if (!$("#DeptCode").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Your Department cannot be null..!'
+            })
+        } else if (!$("#duedate").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Receipt Date cannot be null..!'
+            })
+        } else if (!$("#requestNotes").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Request Notes cannot be null..!'
+            })
+        } else if (!$("#LocationCode").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Location cannot be null..!'
+            })
+        } else if (!$("#Priority").val()) {
+            Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Priority cannot be null..!'
+            })
+        } else {
+            Swal.fire({
+                type: 'info',
+                title: 'Are You Sure?',
+                text: 'Add New PR',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '<i class="zmdi zmdi-plus"></i> Add'
+            
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/PurchaseRequest/AddNewPRHeader",
+                        data: $("#form-addHeader").serialize(),
+                        success: function (result) {
+                            console.log(result);
+                            if (result.status == true) {
+                                Swal.fire(
+                                'Saved!',
+                                'Your data has been saved.',
+                                'success'
+                                ).then((result) => {
+                                    window.location.href = "/PurchaseRequest/AddPRNew";
+                                })
+                            }
+                            else {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops...',
+                                    text: 'Something went wrong!',
+                                    footer: ''+result.message
+                                })
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    }
+</script>
+
+<!--Function Add Line-->
+<script>
+    function AddLine(No) {
+        console.log(No);
+        window.location.href = "/PurchaseRequest/AddPRNewDetailCSCSHTMLaqilhuiz?ReQUest=" + No;
+    }
+</script>
+
+    <!--Custom Scripts End-->
+}

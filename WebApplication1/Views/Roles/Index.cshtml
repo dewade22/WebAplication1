@@ -1,0 +1,192 @@
+﻿@model WebApplication1.Models.ViewModel.RolesViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="content" id="tabel-section">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>List of Roles</h2>
+            </div>
+            <div class="card-body card-padding">
+                <button type="button"  class="btn palette-Green bg waves-effect" id="show-add"><i class="zmdi zmdi-plus"></i> Add New</button>
+                <div class="table-responsive">
+                    <table id="tabel_daftar_role" class="table table-vmiddle" style="table-layout: auto;">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-visible="false" data-order="asc">ID</th>
+                                <th data-column-id="No" data-header-css-class="header-no">No</th>
+                                <th data-column-id="RoleName" data-header-css-class="header-role-name">Roles</th>
+                                <th data-column-id="Description" data-header-css-class="header-description">Description</th>
+                                <th data-column-id="action" data-formatter="action" data-sortable="false" data-header-css-class="header-action">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;}
+                            @foreach (var item in Model.RoleList)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(a => item.Id)</td>
+                                    <td>@(i++)</td>
+                                    <td>@Html.DisplayFor(a => item.Title)</td>
+                                    <td>@Html.DisplayFor(a => item.Description)</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content" id="input-section">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Add New Roles</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="form-group">
+                    <form id="form-input" role="form" method="post" asp-controller="Roles" asp-action="AddRoles">
+                        <div class="form-group">
+                            <div class="input-group fg-float">
+                                <span class="input-group-addon"><i class="zmdi zmdi-wrench"></i></span>
+                                <div class="fg-line">
+                                    <input asp-for="RoleDetail.Title" type="text" class="form-control" id="roles-tittle" required />
+                                    <label class="fg-label">Roles Name<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <br /><br />
+                            <div class="input-group fg-float">
+                                <span class="input-group-addon"><i class="zmdi zmdi-file-text"></i></span>
+                                <div class="fg-line">
+                                    <textarea asp-for="RoleDetail.Description" type="text" class="form-control" id="roles-description" required ></textarea>
+                                    <label class="fg-label">Roles Description<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <br /><br />
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-2 col-md-offset-4" style="padding-bottom:5px; padding-top:5px;">
+                                <button type="submit" class="btn btn-block palette-Blue bg waves-effect" id="submitform"><i class="zmdi zmdi-plus"></i> Add</button>   
+                            </div>
+                            <div class="col-md-2" style="padding-bottom:5px; padding-top:5px;">
+                                <button type="button" class="btn btn-block palette-Orange bg waves-effect" id="cancel-add"><i class="zmdi zmdi-close"></i> Cancel</button>
+                            </div>
+                        </div>
+                        <br />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Styles{
+    <link rel="stylesheet" href="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.min.css" />
+    <style>
+        .header-no {
+            width: 10%;
+        }
+
+        .header-role-name {
+            width: 20%;
+        }
+
+        .header-description {
+            width: 50%;
+        }
+
+        .header-action {
+            width: 20%;
+        }
+    </style>
+
+}
+@section Scripts{
+<!--Section Scripts-->
+
+    <script type="text/javascript" src="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+    <script type="text/javascript" src="~/ThemeForest/sweetalert2/sweetalert2.all.min.js"></script>
+
+<!--Akhir section Scripts-->
+
+    <script>
+        $(document).ready(function () {
+            $("#tabel-section").show();
+            $("#input-section").hide();
+
+            $("#tabel_daftar_role").bootgrid({
+                caseSensitive: false,
+                css: {
+                    icon: 'zmdi icon',
+                    iconColumns: 'zmdi-view-module',
+                    iconDown: 'zmdi-expand-more',
+                    iconRefresh: 'zmdi-refresh',
+                    iconUp: 'zmdi-expand-less'
+                },
+                formatters: {
+                    "action": function (column, row) {
+                        return "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" onclick='EditRoles(\"" + row.id + "\")'><span class=\"zmdi zmdi-edit\"></span></button>" +
+                            "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" onclick='DeleteRoles(\"" + row.id + "\")'><span class=\"zmdi zmdi-delete\"></span></button>";
+                    }
+                }
+            })
+        })
+    </script>
+<script>
+    $("#show-add").click(function () {
+        $("#tabel-section").hide();
+        $("#input-section").show();
+    /*Kosongkan Form Input Didalam input-section*/
+        $("#roles-tittle").val('');
+        $("#roles-description").val('');
+    })
+    $("#cancel-add").click(function () {
+        $("#tabel-section").show();
+        $("#input-section").hide();
+    })
+</script>
+<script>
+    function DeleteRoles(id) {
+        Swal.fire({
+            title: 'Are You Sure?',
+            text: 'Are You Sure Want To Delete This Roles?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '<i class="fa fa-eraser"></i> Yes, Delete!',
+            cancelButtonText: '<i class="fa fa-ban"></i> Cancel'
+        }).then((result) => {
+            $.ajax({
+                type: "POST",
+                url: "/Roles/DisposeRoles?ajewbbrklwebrafuyuvaefjabewfiaef=" + id,
+                success: function (result) {
+                    if (result == "Sukses") {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your roles has been deleted.',
+                            'success'
+                        ).then((result) => {
+                            window.location.href = "/Roles/Index";
+                        })
+                    } else {
+                        Swal.fire({
+                            type: 'error',
+                            title: 'Oops...',
+                            text: 'Failed To Delete, ' + result+''
+                        })
+                    }
+                }
+            })
+        })
+    }
+</script>
+<script>
+    function EditRoles(id) {
+        window.location.href = "/Roles/EditRolesAndDetailAccess?tyqiasdbhasdjjiiuqwevxvzzzxcvasd=" + id;
+    }
+</script>
+ }

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<WebApplication1.Models.ViewModel.UsersRoleViewModel>
+@{
+    ViewData["Title"] = "User List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>List of Users</h2>
+            </div>
+            <div class="card-body card-padding">
+                <div class="table-responsive">
+                    <table id="tabel_daftar_user" class="table table-vmiddle" style="table-layout:auto">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-visible="false" data-order="asc">ID</th>
+                                <th data-column-id="No" data-header-css-class="header-no">No</th>
+                                <th data-column-id="UserName" data-header-css-class="header-user-name">User Name</th>
+                                <th data-column-id="Email" data-header-css-class="header-email">E-Mail</th>
+                                <th data-column-id="Roles" data-header-css-class="header-Roles">Roles</th>
+                                <th data-column-id="action" data-formatter="action" data-sortable="false" data-header-css-class="header-action">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 1;}
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(a => item.userDetail.Id)</td>
+                                    <td>@(i++)</td>
+                                    <td>@Html.DisplayFor(a => item.userDetail.UserName)</td>
+                                    <td>@Html.DisplayFor(a => item.userDetail.Email)</td>
+                                    <td>@Html.DisplayFor(a => item.rolesDetail.Title)</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section Styles{
+    <link rel="stylesheet" href="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.min.css" />
+    <style>
+        .header-no {
+            width: 10%;
+        }
+
+        .header-user-name {
+            width: 20%;
+        }
+
+        .header-email {
+            width: 30%;
+        }
+
+        .header-Roles {
+            width: 20%;
+        }
+
+        .header-action {
+            width: 20%;
+        }
+    </style>
+}
+@section Scripts{
+    <!--Section Scripts-->
+
+    <script type="text/javascript" src="~/ThemeForest/vendors/bootgrid/jquery.bootgrid.updated.min.js"></script>
+    <script type="text/javascript" src="~/ThemeForest/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <!--Akhir section Scripts-->
+
+<script>
+    $("#tabel_daftar_user").bootgrid({
+                caseSensitive: false,
+                css: {
+                    icon: 'zmdi icon',
+                    iconColumns: 'zmdi-view-module',
+                    iconDown: 'zmdi-expand-more',
+                    iconRefresh: 'zmdi-refresh',
+                    iconUp: 'zmdi-expand-less'
+                },
+                formatters: {
+                    "action": function (column, row) {
+                        return "<button type=\"button\" class=\"btn btn-icon command-delete waves-effect waves-circle\" onclick='EditUR(\"" + row.id + "\")'><span class=\"zmdi zmdi-edit\"></span></button>";
+                    }
+                }
+            })
+</script>
+<script>
+    function EditUR(id) {
+        window.location.href = "/Users/ShowUserDetailAbsahjskdUhduiagdsNBDA?WYGAILvsdhalsvMwebhJSA=" + id;
+    }
+</script>
+}

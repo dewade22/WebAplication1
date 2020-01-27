@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <section id="content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Sales Statistics <small>Vestibulum purus quam scelerisque, mollis nonummy metus</small></h2>
+
+                    <ul class="actions">
+                        <li>
+                            <a href="#">
+                                <i class="zmdi zmdi-check-all"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="zmdi zmdi-trending-up"></i>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown">
+                                <i class="zmdi zmdi-more-vert"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="#">Change Date Range</a>
+                                </li>
+                                <li>
+                                    <a href="#">Change Graph Type</a>
+                                </li>
+                                <li>
+                                    <a href="#">Other Settings</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="chart-edge">
+                        <div id="curved-line-chart" class="flot-chart "></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="c-grid" class="clearfix" data-columns>
+                <div class="card c-dark palette-Light-Blue bg">
+                    <div class="card-header">
+                        <h2>Website Impressions <small>Consectetur Ultricies Porta Fringilla</small></h2>
+
+                        
+                    </div>
+                    <div class="card-body card-padding">
+                        <h2 class="m-t-0 m-b-15 c-white">
+                            
+                            987,453
+                        </h2>
+
+                        <div class="sparkline-1 text-center"></div>
+                    </div>
+                </div>
+
+                
+
+                <div class="card" id="calendar-widget">
+                    <div class="card-header cw-header palette-Teal-400 bg">
+                        <div class="cwh-year"></div>
+                        <div class="cwh-day"></div>
+
+                        <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
+                    </div>
+
+                    <div class="card-body card-padding-sm">
+                        <div id="cw-body"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header ch-img" style="background-image: url(img/demo/note.png); height: 250px;"></div>
+                    <div class="card-header">
+                        <h2>
+                            Pellentesque Ligula Fringilla
+
+                            <small>by Malinda Hollaway on 19th June 2015 at 09:10 AM</small>
+                        </h2>
+                    </div>
+                    <div class="card-body card-padding">
+                        <p>Donec ullamcorper nulla non metus auctor fringilla. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra </p>
+
+                        <a href="#" class="view-more"><i class="zmdi zmdi-long-arrow-right"></i> View Article...</a>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </section>
+@section Scripts{
+
+ }
